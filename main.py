@@ -18,6 +18,9 @@ from utils.init import initialize
 from utils.counter import initialize_user_count, increment_user_count, get_user_count
 from utils.TelegramSender import TelegramSender
 
+# Set page config at the very beginning
+st.set_page_config(layout="wide", page_title="צ'אט עם דמויות ממלחמת הכוכבים", page_icon="🌟")
+
 # Constants
 UPLOAD_FOLDER = "uploads"
 DATA_FOLDER = "data"
@@ -89,8 +92,6 @@ def convert_height_weight(type_value, value):
     return f"{value} {unit}"
 
 def fetch_character():
-    print("fetch_character()")
-
     char_id = random.randint(1, 88)
     print(char_id)
     url = f"https://rawcdn.githack.com/akabab/starwars-api/0.2.1/api/id/{char_id}.json"
@@ -107,7 +108,6 @@ def fetch_character():
 def cached_fetch_character(_):
     return fetch_character()
 
-
 @st.cache_resource
 def get_translator():
     return GoogleTranslator(source='auto', target='iw')
@@ -120,9 +120,6 @@ def translate_to_hebrew(text):
         st.error(f"שגיאה בתרגום: {str(e)}")
         return text
 
-def create_descriptive_information(title, value):
-    translated_value = translate_to_hebrew(str(value)) if value else ""
-    return f"<h3 id='{title}'>{title}: {translated_value}</h3>" if value else ""
 
 def get_image(image, char_id):
     return CHARACTER_IMAGES.get(str(int(char_id)), image)
@@ -134,26 +131,88 @@ def display_character(char):
     character_name = char.get('name', 'שם לא ידוע')
     st.session_state['character_name'] = character_name
     
-    descriptive_info = "".join([
-        create_descriptive_information(title, char.get(key))
-        for title, key in [
-            ('זן', 'species'), ('גובה', 'height'), ('מגדר', 'gender'),
-            ('עולם הבית', 'homeworld'), ('צבע שיער', 'hairColor'),
-            ('צבע עיניים', 'eyeColor'), ('צבע עור', 'skinColor'),
-            ('משקל', 'weight')
-        ]
-    ])
+    # Display character name as centered title with gold glow effect
+    st.markdown(f"""
+        <h1 class="character-title">
+            {character_name}
+        </h1>
+        <style>
+            .character-title {{
+                text-align: right;
+                font-size: 4vw;
+                margin-bottom: 1px;
+                color: #FFD700; /* Gold color */
+                text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700; /* Gold glow effect */
+                font-family: 'Orbitron', sans-serif;
+            }}
+            .info h3 {{
+                font-size: 100%;
+                margin-bottom: 1px;
+            }}
+            /* Responsive styles */
+            @media (min-width: 768px) {{
+            .character-name {{
+                font-size: 4vw; /* Smaller on larger screens */
+            }}
+            .info h3 {{
+                font-size: 2vw; /* Smaller on larger screens */
+            }}
+        }}
+        /* Ensure minimum font size on very small screens */
+        @media (min-width: 768px) {{
+            .character-name {{
+                font-size: 4vw; /* Smaller on larger screens */
+            }}
+            .info h3 {{
+                font-size: 2vw; /* Smaller on larger screens */
+            }}
+        }}
+        /* Ensure minimum font size on very small screens */
+        @media (max-width: 480px) {{
+            .character-name {{
+                font-size: 2rem !important; /* Use rem for better scaling */
+            }}
+            .info h3 {{
+                font-size: 1rem !important; /* Use rem for better scaling */
+            }}
+        }}
+        </style>
+    """, unsafe_allow_html=True)
 
-    image_url = get_image(char.get('image'), char.get('id'))
+    # Create two columns
+    col1, col2 = st.columns(2)
 
-    col1, col2 = st.columns([1, 1])
+    # Column 1: Character information
     with col1:
-        st.markdown(f"<div class='info'><h1 id='name'>{character_name}</h1>{descriptive_info}</div>", unsafe_allow_html=True)
+        descriptive_info = "".join([
+            create_descriptive_information(title, key, char.get(key))
+            for title, key in [
+                ('זן', 'species'), ('גובה', 'height'), ('מגדר', 'gender'),
+                ('עולם הבית', 'homeworld'), ('צבע שיער', 'hairColor'),
+                ('צבע עיניים', 'eyeColor'), ('צבע עור', 'skinColor'),
+                ('משקל', 'weight')
+            ]
+        ])
+        st.markdown(f"<div class='info'>{descriptive_info}</div>", unsafe_allow_html=True)
 
+    # Column 2: Images
     with col2:
-        st.markdown(f"<div class='image'><img src='{image_url}' width='300px'/></div>", unsafe_allow_html=True)
+        image_url = get_image(char.get('image'), char.get('id'))
+        st.image(image_url, width=300)
+        
         with st.spinner('טוען דמות מצוירת...'):
             generates_hand_drawn_cartoon_style_images(char.get('name'), character_name)
+
+# Update the create_descriptive_information function
+def create_descriptive_information(title, key, value):
+    
+    if key in ['height', 'weight']:
+        converted_value = convert_height_weight(key, value)
+    else:
+        converted_value = translate_to_hebrew(str(value)) if value else ""
+    
+    return f"<h3>{title}: {converted_value}</h3>" if converted_value else ""
+
 
 def generates_hand_drawn_cartoon_style_images(prompt, character_name):
     filename = re.sub(r'[^\w\s]', '', character_name).replace(' ', '_') + ".jpg"
@@ -217,8 +276,64 @@ def load_new_character():
 
 async def main():
     title, image_path, footer_content = initialize()
+    
+    st.markdown(f"""
+    <h1 class="character-name">
+        {title}
+    </h1>
+    <style>
+        @keyframes sparkle-red {{
+            0% {{ text-shadow: 0 0 10px #FF0000, 0 0 20px #FF0000, 0 0 30px #FF0000; }}
+            25% {{ text-shadow: 0 0 10px #DC143C, 0 0 20px #DC143C, 0 0 30px #DC143C; }}
+            50% {{ text-shadow: 0 0 10px #B22222, 0 0 20px #B22222, 0 0 30px #B22222; }}
+            75% {{ text-shadow: 0 0 10px #8B0000, 0 0 20px #8B0000, 0 0 30px #8B0000; }}
+            100% {{ text-shadow: 0 0 10px #FF0000, 0 0 20px #FF0000, 0 0 30px #FF0000; }}
+        }}
+        
+        .character-name {{
+            text-align: right;
+            font-size: 8vw; /* Default to a responsive size */
+            margin-bottom: 1px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            color: #FF0000;
+            animation: sparkle-red 2s infinite alternate;
+        }}
+        .info h3 {{
+            font-size: 4vw; /* Default to a responsive size */
+            margin-bottom: 1px;
+        }}
+        /* Responsive styles */
+        @media (min-width: 768px) {{
+            .character-name {{
+                font-size: 4vw; /* Smaller on larger screens */
+            }}
+            .info h3 {{
+                font-size: 2vw; /* Smaller on larger screens */
+            }}
+        }}
+        /* Ensure minimum font size on very small screens */
+        @media (max-width: 480px) {{
+            .character-name {{
+                font-size: 2rem !important; /* Use rem for better scaling */
+            }}
+            .info h3 {{
+                font-size: 1rem !important; /* Use rem for better scaling */
+            }}
+        }}
+    </style>
+""", unsafe_allow_html=True)
 
-    st.title(title)
+    with st.expander('אודות האפליקציה - נוצרה ע"י שגיא בר און'):
+        st.markdown('''
+         אפליקציית Star Wars Chat & Art מציעה חוויה ייחודית של שילוב בין עולם הדמיון והמציאות. 
+                    
+        תהנו מתמונות אמיתיות של דמויות מ-Star Wars, לצד תמונות מצוירות בסגנון וינטג' המעניקות תחושה קלאסית ומעוררת נוסטלגיה. 
+                            
+        אך זה לא הכל – תוכלו לשוחח עם הדמויות האהובות דרך צ'אט, ולקבל תשובות ישירות מהן! 
+                            
+        האפליקציה מציעה חווית שימוש אינטראקטיבית ומרהיבה, המשלבת אומנות וחדשנות בתקשורת עם הדמויות האייקוניות של סדרת סרטי המדע הבדיוני המפורסמת בעולם.
+        ''')        
 
     if image_path:
         col1, col2, col3 = st.columns([1, 2, 1])
@@ -240,15 +355,12 @@ async def main():
     
     create_chatbot()
 
+    # Display footer content
+    st.markdown(footer_content, unsafe_allow_html=True)    
+
     # Display user count after the chatbot
     user_count = get_user_count(formatted=True)
     st.markdown(f"<p class='user-count' style='color: #4B0082;'>סה\"כ משתמשים: {user_count}</p>", unsafe_allow_html=True)
-
-    # Display footer content
-    st.markdown(footer_content, unsafe_allow_html=True)
-
-    # Display update information after the buttons
-    st.markdown("<p style='text-align: center; color: #888;'>🖖 עודכן על ידי שגיא בר און ב 27/7/2024</p>", unsafe_allow_html=True)
 
 async def send_telegram_message_and_file(message, file_path):
     sender = st.session_state.telegram_sender

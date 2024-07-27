@@ -19,7 +19,7 @@ def initialize():
         if line.startswith('!['):
             image_path = line.split('(')[1].split(')')[0]
             break
-    
+
     # Load external CSS
     css_file_path = os.path.join('utils', 'styles.css')
     with open(css_file_path, 'r') as f:
@@ -33,21 +33,5 @@ def initialize():
     except FileNotFoundError:
         st.error("footer.md file not found in utils folder.")
         footer_content = ""  # Provide a default empty footer    
-
-    # Load external CSS
-    css_file_path = os.path.join('utils', 'styles.css')
-    with open(css_file_path, 'r') as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)    
-
-    with st.expander('אודות האפליקציה - נוצרה ע"י שגיא בר און'):
-        st.markdown('''
-         אפליקציית Star Wars Chat & Art מציעה חוויה ייחודית של שילוב בין עולם הדמיון והמציאות. 
-                    
-תהנו מתמונות אמיתיות של דמויות מ-Star Wars, לצד תמונות מצוירות בסגנון וינטג' המעניקות תחושה קלאסית ומעוררת נוסטלגיה. 
-                    
-אך זה לא הכל – תוכלו לשוחח עם הדמויות האהובות דרך צ'אט, ולקבל תשובות ישירות מהן! 
-                    
-האפליקציה מציעה חווית שימוש אינטראקטיבית ומרהיבה, המשלבת אומנות וחדשנות בתקשורת עם הדמויות האייקוניות של סדרת סרטי המדע הבדיוני המפורסמת בעולם.
-        ''')
 
     return title, image_path, footer_content
