@@ -34,6 +34,8 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 groq_client = groq.Groq(api_key=GROQ_API_KEY)
 GROQ_MODELS = os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile").split(",")
 
+CHARACTER_PROMPTS_FILE = os.path.join(DATA_FOLDER, 'character_prompts.json')
+
 @st.cache_data
 def load_character_images():
     try:
@@ -45,12 +47,52 @@ def load_character_images():
 
 CHARACTER_IMAGES = load_character_images()
 
+def load_character_prompts():
+    if os.path.exists(CHARACTER_PROMPTS_FILE):
+        with open(CHARACTER_PROMPTS_FILE, 'r') as file:
+            return json.load(file)
+    return {}
+
+def save_character_prompt(character_name, prompt):
+    prompts = load_character_prompts()
+    prompts[character_name] = prompt
+    with open(CHARACTER_PROMPTS_FILE, 'w') as file:
+        json.dump(prompts, file, indent=2)
+
+def get_or_create_character_prompt(character_name):
+    prompts = load_character_prompts()
+    if character_name in prompts:
+        return prompts[character_name]
+    
+    print ("get_or_create_character_prompt")
+    # If not found, ask Groq to create a prompt in English
+    system_prompt = f"Create a system prompt for a Star Wars chatbot impersonating {character_name}. The prompt should capture the character's personality, speech patterns, and key traits. The response should be in English and start with 'You are {character_name}...'"
+    
+    response = groq_client.chat.completions.create(
+        messages=[
+            {"role": "system", "content": "You are an expert on Star Wars characters and their personalities."},
+            {"role": "user", "content": system_prompt},
+        ],
+        model=GROQ_MODELS[0],  # Use the first model in the list
+        temperature=0.0,
+        max_tokens=int(os.getenv("GROQ_MAX_TOKENS", 1024)),
+        stream=False,
+    )
+    
+    new_prompt = response.choices[0].message.content
+    save_character_prompt(character_name, new_prompt)
+    return new_prompt
+
 @lru_cache(maxsize=100)
-def ask_groq(character_name, question):
-    system_prompt = "You are an expert star wars guide. You always answer only in the context of Star Wars! The answers you return must be short and in Hebrew!"
-    user_prompt = f"Your name is: {character_name} and I wanted to ask you:{question}"
+def ask_groq(character_name, question):    
+    character_prompt = get_or_create_character_prompt(character_name)
+    system_prompt = f"{character_prompt} Always answer in Hebrew and keep responses concise."
+    user_prompt = f"Answer this question in Hebrew: {question}"
     
     random.shuffle(GROQ_MODELS)
+    
+    # print(system_prompt)
+    # print(user_prompt)
     
     for model in GROQ_MODELS:
         try:
@@ -67,7 +109,7 @@ def ask_groq(character_name, question):
             return response.choices[0].message.content
         except Exception as e:
             print(f"Error with model {model}: {str(e)}. Trying next model.")
-    
+
     return get_random_response()
 
 @st.cache_data
@@ -206,7 +248,7 @@ def display_character(char):
 
 # Update the create_descriptive_information function
 def create_descriptive_information(title, key, value):
-    print("key:{} value:{}".format(key, value))
+    # print("key:{} value:{}".format(key, value))
 
     if key in ['height', 'weight']:
         converted_value = convert_height_weight(key, value)
