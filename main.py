@@ -1,4 +1,6 @@
 import streamlit as st
+import asyncio
+from io import BytesIO
 import requests
 import random
 import os
@@ -86,9 +88,11 @@ def convert_height_weight(type_value, value):
     unit = 'מטר' if type_value == 'height' else 'ק"ג'
     return f"{value} {unit}"
 
-@st.cache_data
 def fetch_character():
+    print("fetch_character()")
+
     char_id = random.randint(1, 88)
+    print(char_id)
     url = f"https://rawcdn.githack.com/akabab/starwars-api/0.2.1/api/id/{char_id}.json"
     try:
         response = requests.get(url)
@@ -97,6 +101,12 @@ def fetch_character():
     except requests.RequestException as e:
         st.error(f"שגיאה בטעינת הדמות: {str(e)}")
         return None
+
+# Add a new function to force a new character fetch
+@st.cache_data
+def cached_fetch_character(_):
+    return fetch_character()
+
 
 @st.cache_resource
 def get_translator():
@@ -198,7 +208,14 @@ def create_chatbot():
             st.markdown(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
 
-def main():
+def load_new_character():
+    # Clear the cache for cached_fetch_character
+    cached_fetch_character.clear()
+    # Fetch a new character with a random parameter to bypass cache
+    st.session_state.character = cached_fetch_character(random.random())
+    st.session_state.messages = [{"role": "assistant", "content": "הי 👋"}]
+
+async def main():
     title, image_path, footer_content = initialize()
 
     st.title(title)
@@ -209,20 +226,23 @@ def main():
             st.image(image_path, use_column_width=True)
 
     if st.button("טען דמות חדשה"):
-        st.session_state.clear()
-        st.session_state.character = fetch_character()
-        st.session_state.messages = [{"role": "assistant", "content": "הי 👋"}]
-        st.experimental_rerun()
+        load_new_character()
+        st.rerun()
 
     if 'character' not in st.session_state or not st.session_state.character:
         with st.spinner('טוען דמות ראשונית...'):
-            st.session_state.character = fetch_character()
-        if st.session_state.character:
-            display_character(st.session_state.character)
-            if "messages" not in st.session_state:
-                st.session_state.messages = [{"role": "assistant", "content": "הי 👋"}]
-    elif st.session_state.character:
+            st.session_state.character = cached_fetch_character(random.random())
+    
+    if st.session_state.character:
         display_character(st.session_state.character)
+        if "messages" not in st.session_state:
+            st.session_state.messages = [{"role": "assistant", "content": "הי 👋"}]
+    
+    create_chatbot()
+
+    # Display user count after the chatbot
+    user_count = get_user_count(formatted=True)
+    st.markdown(f"<p class='user-count' style='color: #4B0082;'>סה\"כ משתמשים: {user_count}</p>", unsafe_allow_html=True)
 
     # Display footer content
     st.markdown(footer_content, unsafe_allow_html=True)
@@ -230,10 +250,18 @@ def main():
     # Display update information after the buttons
     st.markdown("<p style='text-align: center; color: #888;'>🖖 עודכן על ידי שגיא בר און ב 27/7/2024</p>", unsafe_allow_html=True)
 
-    # Display user count after the chatbot
-    user_count = get_user_count(formatted=True)
-    st.markdown(f"<p class='user-count' style='color: #4B0082;'>סה\"כ משתמשים: {user_count}</p>", unsafe_allow_html=True)
+async def send_telegram_message_and_file(message, file_path):
+    sender = st.session_state.telegram_sender
+    try:
+        await sender.send_document(file_path, message)
+    finally:
+        await sender.close_session()
 
-    create_chatbot()
 if __name__ == "__main__":
-    main()
+    if 'telegram_sender' not in st.session_state:
+        st.session_state.telegram_sender = TelegramSender()
+    if 'counted' not in st.session_state:
+        st.session_state.counted = True
+        increment_user_count()
+    initialize_user_count()
+    asyncio.run(main())

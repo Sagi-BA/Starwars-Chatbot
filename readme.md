@@ -1,8 +1,8 @@
 ![Alt text](https://i.imgur.com/RhRQLLN.jpg)
 
-# 👀 Generates hand-drawn cartoon-style images based on text prompts.
+# 👀 Star Wars Chat & Art
 
-Generates hand-drawn cartoon-style images based on text prompts.
+A Living Galaxy brings the Star Wars characters to life through interactive conversations and spectacular vintage art. Chat with your favorite heroes and create unique galactic memories.
 
 > You can try the app [here](https://sagi-starwars-chatbot.streamlit.app/)
 
@@ -23,11 +23,13 @@ Generates hand-drawn cartoon-style images based on text prompts.
 
 ## How it works
 
-[littletinies](https://huggingface.co/spaces/fujohnwang/alvdansen-littletinies) is a model developed by alvdansen that generates hand-drawn cartoon-style images based on text prompts. The model is capable of producing whimsical, stylized illustrations of people, animals, and nature scenes. It excels at creating a classic, vintage feel with its distinctive visual style.
+The Star Wars Chat & Art app offers a unique experience of combining the world of imagination and reality.
 
-Compared to similar models like BandW-Manga which creates bold, black and white manga-inspired art, littletinies has a softer, more delicate aesthetic. The images it generates have a hand-drawn quality with fluid brushstrokes and a muted color palette.
+Enjoy real-life images of Star Wars characters alongside vintage-style cartoons for a classic, nostalgic feel.
 
-The model can depict a wide range of subjects, from a girl wandering through a forest to a toad or an artist sketching. While the results are imaginative and charming, the model may struggle with producing highly realistic representations, especially of human faces and complex scenes.
+But that's not all - you can chat with your favorite characters through chat, and get answers directly from them!
+
+The application offers an interactive and spectacular user experience, which combines art and innovation in communication with the iconic characters of the world famous science fiction film series.
 
 ## Install dependencies
 

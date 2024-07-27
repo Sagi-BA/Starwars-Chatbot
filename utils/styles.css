@@ -168,7 +168,7 @@ h3 {
 }
 
 .stChatFloatingInputContainer {
-  background-color: #8b0000 !important; /* Dark red background */
+  background-color: var(--main-bg-color);
 }
 
 .stChatMessage {
