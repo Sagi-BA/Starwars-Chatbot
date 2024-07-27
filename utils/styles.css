@@ -1,0 +1,291 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Exo+2:wght@300;400;700&display=swap");
+
+:root {
+  --main-bg-color: #0c0d0e;
+  --secondary-bg-color: #1c1e22;
+  --text-color: #ffffff;
+  --accent-color: #4bb3fd;
+  --glow-color: #4bb3fd;
+}
+
+/* Streamlit-specific styles */
+.stApp {
+  background-color: var(--main-bg-color);
+}
+
+.streamlit-expanderHeader {
+  background-color: white;
+  color: black;
+}
+.streamlit-expanderContent {
+  background-color: white;
+  color: black;
+}
+
+.stTextInput input {
+  width: 100%;
+}
+
+.stTextInput > label,
+.stSelectbox > label {
+  color: var(--text-color) !important;
+}
+
+.stTextInput > div > div > input,
+.stSelectbox > div > div > div {
+  color: var(--text-color) !important;
+  background-color: var(--secondary-bg-color) !important;
+}
+
+/* Target all text elements */
+.stMarkdown,
+.stText,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span {
+  color: var(--text-color) !important;
+}
+
+/* Ensure button text is visible */
+.stButton > button {
+  width: 100%;
+  color: var(--main-bg-color) !important;
+  background-color: var(--accent-color) !important;
+  border-color: var(--glow-color) !important;
+  margin: 15px;
+}
+
+.stButton > button:hover {
+  color: var(--text-color) !important;
+  background-color: var(--secondary-bg-color) !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 10px var(--glow-color);
+}
+
+body {
+  font-family: "Exo 2", sans-serif;
+  direction: rtl;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Orbitron", sans-serif;
+  color: var(--accent-color);
+  text-shadow: 0 0 10px var(--glow-color);
+}
+
+img {
+  max-width: 40vw;
+  max-height: 60vh;
+  float: right;
+  margin: 0 30px 20px 0;
+  border-radius: 10px;
+  background: linear-gradient(to bottom, #1c1e22 0%, #2c3e50 100%);
+  box-shadow: 0 0 25px var(--glow-color);
+  transition: box-shadow 1s;
+}
+
+.send-button {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.send-button:hover {
+  background-color: darkred;
+}
+
+.stButton > button[data-testid="stButton"] {
+  display: none;
+}
+
+h1 {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 700;
+  font-size: 4rem;
+  margin-bottom: 40px;
+  text-align: right;
+  color: var(--accent-color);
+  text-shadow: 0 0 10px var(--glow-color);
+}
+
+h3 {
+  margin-bottom: 5px;
+  font-weight: 400;
+  font-family: "Exo 2", sans-serif;
+  text-transform: capitalize;
+  letter-spacing: 1.2px;
+  font-size: 1rem;
+  text-align: right;
+}
+
+.rtl-content {
+  direction: rtl;
+  text-align: right;
+}
+
+#alert {
+  color: #ff4d4d;
+  text-decoration: underline;
+}
+
+.hidden-div {
+  display: none;
+}
+
+.chatbot-container {
+  border: 1px solid white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.user-count {
+  color: var(--text-color);
+  text-align: center;
+  margin-top: 20px;
+}
+
+.stChatFloatingInputContainer {
+  background-color: #8b0000 !important; /* Dark red background */
+}
+
+.stChatMessage {
+  background-color: rgba(
+    139,
+    0,
+    0,
+    0.1
+  ) !important; /* Slightly transparent dark red for messages */
+  border: 1px solid #8b0000;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.stChatMessage.user {
+  background-color: rgba(
+    0,
+    0,
+    139,
+    0.1
+  ) !important; /* Dark blue for user messages */
+  border-color: #00008b;
+}
+
+/* Adjust text color for better visibility */
+.stChatMessage .stMarkdown p {
+  color: #ffffff !important; /* White text for better contrast */
+}
+
+/* Media queries remain the same */
+@media screen and (max-width: 1580px) {
+  .button {
+    width: 15vw;
+  }
+}
+
+@media screen and (max-width: 1320px) {
+  .button {
+    width: 17.5vw;
+  }
+}
+
+@media screen and (max-width: 1125px) {
+  .button {
+    width: 20vw;
+  }
+
+  h1 {
+    font-size: 3.5rem;
+  }
+}
+
+@media screen and (max-width: 990px) {
+  .button {
+    width: 22.5vw;
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .button {
+    width: 27.5vw;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h3 {
+    font-size: 0.8rem;
+  }
+
+  img {
+    max-height: 50vh;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .button {
+    margin-top: 10px;
+    width: 40vw;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 500;
+  }
+
+  h3 {
+    font-size: 0.65rem;
+  }
+
+  img {
+    max-height: 40vh;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .button {
+    width: 50vw;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 0.55rem;
+  }
+}

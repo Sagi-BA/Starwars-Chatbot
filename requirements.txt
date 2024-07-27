@@ -1,0 +1,12 @@
+streamlit 
+# streamlit-extras
+python-dotenv
+aiohttp #This is for telegram
+requests
+asyncio
+PIL
+gradio_client
+deep_translator
+groq
+pillow
+
