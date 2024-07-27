@@ -184,6 +184,7 @@ def display_character(char):
 
     # Column 1: Character information
     with col1:
+        
         descriptive_info = "".join([
             create_descriptive_information(title, key, char.get(key))
             for title, key in [
@@ -205,9 +206,12 @@ def display_character(char):
 
 # Update the create_descriptive_information function
 def create_descriptive_information(title, key, value):
-    
+    print("key:{} value:{}".format(key, value))
+
     if key in ['height', 'weight']:
         converted_value = convert_height_weight(key, value)
+    elif key == 'homeworld':
+        converted_value = value
     else:
         converted_value = translate_to_hebrew(str(value)) if value else ""
     
