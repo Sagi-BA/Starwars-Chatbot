@@ -1,4 +1,5 @@
 streamlit 
+streamlit-chat
 # streamlit-extras
 python-dotenv
 aiohttp #This is for telegram
