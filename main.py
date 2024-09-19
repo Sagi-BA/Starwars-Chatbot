@@ -320,8 +320,20 @@ def load_new_character():
     st.session_state.character = cached_fetch_character(random.random())
     st.session_state.messages = [{"role": "assistant", "content": "הי 👋"}]
 
+def hide_streamlit_header_footer():
+    hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
+            </style>
+            """
+    st.markdown(hide_st_style, unsafe_allow_html=True)
+    
 async def main():
     title, image_path, footer_content = initialize()
+    hide_streamlit_header_footer()
     
     st.markdown(f"""
     <h1 class="character-name">
