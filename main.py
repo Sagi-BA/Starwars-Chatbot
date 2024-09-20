@@ -323,8 +323,10 @@ def load_new_character():
 def hide_streamlit_header_footer():
     hide_st_style = """
             <style>
-            [data-testid="stToolbar"] {visibility: hidden !important;}
-            footer {visibility: hidden !important;}
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
             </style>
             """
     st.markdown(hide_st_style, unsafe_allow_html=True)
