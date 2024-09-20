@@ -325,6 +325,15 @@ def hide_streamlit_header_footer():
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
+            footer:after {
+                content:'goodbye'; 
+                visibility: visible;
+                display: block;
+                position: relative;
+                #background-color: red;
+                padding: 5px;
+                top: 2px;
+            }
             header {visibility: hidden;}
             #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
             </style>
