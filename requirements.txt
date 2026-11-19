@@ -1,12 +1,7 @@
-streamlit 
-streamlit-chat
-# streamlit-extras
-python-dotenv
-aiohttp #This is for telegram
-requests
-asyncio
-gradio_client
-deep_translator
-groq
-pillow
-
+streamlit==1.67.0
+python-dotenv==1.2.4
+requests==2.34.2
+gradio_client==1.10.3
+deep_translator==1.11.4
+groq==1.7.0
+pillow==13.0.0

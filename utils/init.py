@@ -22,8 +22,8 @@ def initialize():
 
     # Load external CSS
     css_file_path = os.path.join('utils', 'styles.css')
-    with open(css_file_path, 'r') as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)    
+    with open(css_file_path, 'r', encoding='utf-8') as f:
+        st.html(f'<style>{f.read()}</style>')
     
     # Load footer content
     footer_file_path = os.path.join('utils', 'footer.md')

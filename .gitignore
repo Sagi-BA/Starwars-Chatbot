@@ -4,3 +4,6 @@ myenv
 # Ignore all __pycache__ directories
 **/__pycache__/
 
+
+# Web-sized card images, generated on demand
+static/cards/

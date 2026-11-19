@@ -1,5 +1,17 @@
-[ui]
-hideTopBar = true
+[client]
+toolbarMode = "minimal"
 
 [theme]
-base = "dark" 
+base = "dark"
+primaryColor = "#FFE81F"
+linkColor = "#7CC4FF"
+backgroundColor = "#05060D"
+secondaryBackgroundColor = "#11142A"
+textColor = "#E8ECF5"
+borderColor = "#2A2F55"
+baseRadius = "0.9rem"
+font = "Heebo:https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap"
+headingFont = "Heebo"
+
+[server]
+enableStaticServing = true
